@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Login fonksiyonu
   const loginMutation = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      const response = await httpPost('/auth', credentials);
+      const response = await httpPost('auth', credentials);
       if (!response.success) {
         throw new Error('Giriş başarısız');
       }
