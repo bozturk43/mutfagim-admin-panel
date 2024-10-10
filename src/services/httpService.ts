@@ -16,14 +16,14 @@ interface ApiResponse {
 // GET request
 export const httpGet = async (url: string, config?: AxiosRequestConfig): Promise<ApiResponse> => {
   const headers = {
-    'Content-Type': 'application/json', // İçerik türünü ayarla
+    'Content-Type': 'application/json', 
     ...(config?.headers || {}), // Var olan başlıkları koru
   };
 
   try {
     const response = await axios.get(`${API_URL}${url}`,{
       ...config,
-      headers
+      headers,
     });
     return {
       success: true,

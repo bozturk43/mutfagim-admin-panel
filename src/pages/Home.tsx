@@ -7,6 +7,8 @@ import { useAuth } from '../context/AuthContext';
 import { CircularProgress } from '@mui/material';
 import InfoCards from '../components/Home/InfoCards';
 import DynamicTable from '../components/Shared/DynamicTable';
+import ProductsTable from '../components/Home/ProductsTable';
+import RecipesTable from '../components/Home/RecipesTable';
 
 const Home: React.FC = () => {
   const { user } = useAuth();
@@ -17,10 +19,8 @@ const Home: React.FC = () => {
       <CircularProgress />
     )
   }
-  console.log(collections);
-
   return (
-    <>
+    <div className='space-y-4'>
     <div className='flex' style={{ backgroundColor: '#f5f5f5', padding: '20px' }}>
       {collections && collections.map((item: any) => (
         <div key={item.collectionName} style={{ margin: '10px' }}>
@@ -28,12 +28,7 @@ const Home: React.FC = () => {
         </div>
       ))}
     </div>
-    {collections && collections.map((item: any) => (
-        <div key={item.collectionName} style={{ margin: '10px' }}>
-          <DynamicTable records={item.records} />
-        </div>
-      ))}
-    </>
+    </div>
   );
 };
 

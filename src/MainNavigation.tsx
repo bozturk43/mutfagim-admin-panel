@@ -9,6 +9,8 @@ import UrunIslemleri from './pages/UrunIslemler';
 import ReceteIslemleri from './pages/ReceteIslemleri';
 import KullaniciIslemleri from './pages/KullaniciIslemleri';
 import AdminProfili from './pages/AdminProfili';
+import ProductDetails from './pages/ProductDetail';
+import RecipeDetail from './pages/RecipeDetail';
 
 const MainNavigation: React.FC = () => {
     const { user } = useAuth();
@@ -30,6 +32,10 @@ const MainNavigation: React.FC = () => {
                     <Route path="/recete-islemleri" element={<ReceteIslemleri />} />
                     <Route path="/kullanici-islemleri" element={<KullaniciIslemleri />} />
                     <Route path="/admin-profili" element={<AdminProfili />} />
+                    <Route path="/product/:productId" element={<ProductDetails />} />
+                    <Route path="/recipe/:recipeId" element={<RecipeDetail />} />
+
+
                     {/* Diğer rota öğeleri buraya eklenebilir */}
                 </Route>
             )}
