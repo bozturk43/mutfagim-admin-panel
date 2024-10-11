@@ -4,9 +4,13 @@ import SharedTable from '../Shared/SharedTable';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import SelectComponent from '../Shared/Components/BasicSelect';
 import { useAuth } from '../../context/AuthContext';
-import { useAllLovs, useUpdateProduct } from '../../services/queryService';
+import { useAllLovs, useDeleteProduct, useUpdateProduct } from '../../services/queryService';
 import InputComponent from '../Shared/Components/BasicInput';
 import { useForm, Controller } from 'react-hook-form'; // React Hook Form ve Controller
+import { AddCircleOutline } from '@mui/icons-material';
+import BasicModal from '../Shared/Components/BasicModal';
+import AddProductModal from './AddProductModal';
+import AlertDialog from '../Shared/Components/AlertDialog';
 
 // Props arayüzü
 interface InfoProductsProps {
@@ -16,30 +20,28 @@ interface InfoProductsProps {
 const ProductsTable: React.FC<InfoProductsProps> = ({ productsData }) => {
     const { user } = useAuth();
     const { data: lovList, isLoading } = useAllLovs(user);
-    const { records } = productsData; // productsData'dan records array'ini alıyoruz
-    const mutation = useUpdateProduct(user); // Mutasyonu kullan
-    // React Hook Form ve State Yönetimi
-    const { control, handleSubmit,getValues } = useForm();  // React Hook Form kullanımı
+    const { records } = productsData;
+    const updateMutation = useUpdateProduct(user);
+    const deleteMutation = useDeleteProduct(user)
+    const { control, handleSubmit, getValues } = useForm();
     const [editingRow, setEditingRow] = useState<string | null>(null);  // Düzenleme yapılan satırın ID'si
-    // Kaydet butonuna basıldığında API'ye gönderme işlemi
+    const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
+    const [deleteProductId, setDeleteProductId] = useState<string | null>(null);
     const onSubmit = () => {
         const editedData = {
-            id:editingRow,
+            id: editingRow,
             name: getValues(`name-${editingRow}`),
             categoryId: getValues(`category-${editingRow}`),
             unitId: getValues(`unit-${editingRow}`),
         };
         console.log(editedData);
-        mutation.mutate(editedData); // Mutasyonu çalıştır
+        updateMutation.mutate(editedData); // Mutasyonu çalıştır
         // Burada API'ye editedData'yı gönderebilirsiniz
         setEditingRow(null); // Kaydedildikten sonra düzenleme modunu kapat
     };
     const handleEditClick = (rowId: string) => {
         setEditingRow(rowId);  // Hangi satırın düzenlendiğini kaydet
     };
-
-    console.log(lovList);
-
     const columData: ColumnDef<any>[] = React.useMemo(() => [
         {
             accessorKey: 'id',
@@ -128,10 +130,10 @@ const ProductsTable: React.FC<InfoProductsProps> = ({ productsData }) => {
                 const productId = row.original.id;
                 const isEditing = editingRow === productId;  // O anki satır düzenleniyor mu kontrolü
                 return (
-                    <>
+                    <div className='flex space-x-4'>
                         <Button
                             onClick={() => handleEditClick(productId)}
-                            style={{ backgroundColor: 'orange', color: 'white', padding: '8px', border: 'none', marginRight: '10px' }}
+                            style={{ backgroundColor: 'orange', color: 'white', padding: '8px', border: 'none' }}
                             disabled={!!editingRow && editingRow !== productId}  // Sadece bir satır düzenlenebilir
                         >
                             Düzenle
@@ -143,25 +145,50 @@ const ProductsTable: React.FC<InfoProductsProps> = ({ productsData }) => {
                         >
                             Kaydet
                         </Button>
-                    </>
+                        <Button
+                            onClick={() => setDeleteProductId(productId)}  // Formu gönderir
+                            style={{ backgroundColor: 'red', color: 'white', padding: '8px', border: 'none' }}
+                        >
+                            Sil
+                        </Button>
+
+                    </div>
                 );
             },
         },
     ], [records, editingRow, lovList]); // lovList bağımlılığı eklendi
-    
-    
-    if(isLoading){
-        return(
+
+
+    if (isLoading) {
+        return (
             <CircularProgress></CircularProgress>
         )
     }
 
     return (
         <div>
-            <Typography variant='h3'>
-                Sistemde Bulunan Tüm Ürünler
-            </Typography>
+            <div className='flex justify-between'>
+                <Typography variant='h3'>
+                    Sistemde Bulunan Tüm Ürünler
+                </Typography>
+                <Button variant="contained" startIcon={<AddCircleOutline />} onClick={() => setAddModalOpen(true)}>
+                    Yeni Ürün Ekle
+                </Button>
+            </div>
             <SharedTable data={records} columns={columData} />
+            <BasicModal open={addModalOpen} onClose={() => setAddModalOpen(false)}>
+                <AddProductModal
+                    user={user}
+                    productCategoryList={lovList.productCategories}
+                    unitList={lovList.unitTypes}
+                    conversationList={lovList.conversationTypes} />
+            </BasicModal>
+            <AlertDialog
+                open={deleteProductId !== null}
+                title='Dikkat !'
+                description='Ürünü Silmek İstediğinize Emin misiniz ?'
+                onClose={() => setDeleteProductId(null)}
+                onConfirm={() => deleteProductId && deleteMutation.mutate(deleteProductId)} />
         </div>
     );
 };

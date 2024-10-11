@@ -7,9 +7,10 @@ interface InputComponentProps {
   onChange: (value: string) => void; // Değer değiştiğinde tetiklenecek fonksiyon
   label?: string;  // Input'a bir etiket ekleyebiliriz
   disabled:boolean;
+  placeholder?:string;
 }
 
-const InputComponent: React.FC<InputComponentProps> = ({ value, defaultValue, onChange, label,disabled }) => {
+const InputComponent: React.FC<InputComponentProps> = ({ value, defaultValue, onChange, label,disabled,placeholder }) => {
   const [inputValue, setInputValue] = React.useState<string>(defaultValue || '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +20,7 @@ const InputComponent: React.FC<InputComponentProps> = ({ value, defaultValue, on
   };
 
   return (
+
     <TextField
       fullWidth
       label={label}  // İsteğe bağlı bir etiket göstermek için
@@ -26,6 +28,7 @@ const InputComponent: React.FC<InputComponentProps> = ({ value, defaultValue, on
       onChange={handleChange}  // Değer değiştiğinde handleChange çağrılır
       variant="outlined"  // İsteğe bağlı bir stil, isterseniz "standard" veya "filled" de kullanabilirsiniz
       disabled={disabled}
+      placeholder={placeholder ? placeholder : ""}
     />
   );
 };

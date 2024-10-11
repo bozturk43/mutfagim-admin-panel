@@ -43,4 +43,35 @@ export const getHomeInfo = async (user: User): Promise<any[]> => {
       return [];
     }
   };
+  export const deleteProduct = async (user: User,productId:string): Promise<any[]> => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+
+      },
+    };
+    const body = {
+      id:productId
+    }
+    const response = await httpPost('admin/delete-product', body,config);
+    if (response.success) {
+      return response.data || [];
+    } else {
+      return [];
+    }
+  };
+  export const addProduct = async (user: User,productData:any): Promise<any[]> => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+
+      },
+    };
+    const response = await httpPost('admin/add-product', productData,config);
+    if (response.success) {
+      return response.data || [];
+    } else {
+      return [];
+    }
+  };
   

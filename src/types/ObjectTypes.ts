@@ -4,4 +4,8 @@ export type User = {
     name: string;
     token:string;
   };
+  export type Lov = {
+    id: string;
+    name: string;
+  };
   
