@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 // API base URL
-// const API_URL = 'http://localhost:3000/api/admin/';
+// const API_URL = 'http://localhost:3000/api/';
 const API_URL = 'https://mutfagim-next-api.vercel.app/api/admin/';
 
 

@@ -1,7 +1,5 @@
 // src/MainNav.tsx
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
 import { useHomeInfoQuery } from '../services/queryService';
 import { useAuth } from '../context/AuthContext';
 import ProductsTable from '../components/Home/ProductsTable';

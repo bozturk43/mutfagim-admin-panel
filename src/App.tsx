@@ -1,9 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/AuthContext';
 import MainNavigation from './MainNavigation';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 
 
